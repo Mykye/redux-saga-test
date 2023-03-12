@@ -1,12 +1,36 @@
 import React, { useCallback, useState } from 'react'
-import './styles.css'
-//import Button from '@mui/material'
+import { Button, Input, Box } from '@mui/material'
+
+const styles = {
+  box: {
+    border: '1px solid blue',
+    borderRadius: 4,
+    padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '290px'
+  },
+  button: {
+    marginTop: '10px',
+    marginBottom: '10px',
+    alignSelf: 'center'
+  },
+  input: {
+    marginTop: 5
+  },
+  inputs: {
+    display: 'flex',
+    flexDirection: 'column'
+  }
+}
 
 const SignIn = () => {
   const [name, setName] = useState('')
   const [age, setAge] = useState('')
   const [info, setInfo] = useState('')
-  const [show, setShow] = useState(false)
+  const [message, setMessage] = useState({ message: '', style: {} })
 
   const handleNameChange = useCallback((event) => {
     setName(event.target.value)
@@ -21,25 +45,33 @@ const SignIn = () => {
   }, [setInfo])
 
   const handleButtonClick = () => {
-    setShow(true)
-    setTimeout(() => setShow(false), 3000)
+    if (name && age && info) {
+      setMessage({
+        message: 'Authentification ...',
+        style: { color: 'green' }
+      })
+    } else {
+      setMessage({
+        message: 'Please fill all the fields',
+        style: { color: 'red' }
+      })
+    }
+    setTimeout(() => {
+      setMessage({})
+    }, 4000)
   }
 
   return (
-    <div className='signInContainer'>
-      <input className='input' placeholder='name' onChange={handleNameChange} />
-      <input className='input' placeholder='age' onChange={handleAgeChange} />
-      <input className='input' placeholder='info' onChange={handleInfoChange} />
-      <div>
-        <button onClick={handleButtonClick} className='button'>Show info</button>
+    <Box sx={styles.box}>
+      <div>Fill fields to sign in</div>
+      <div style={styles.inputs}>
+        <Input style={styles.input} placeholder='name' onChange={handleNameChange} />
+        <Input style={styles.input} placeholder='age' onChange={handleAgeChange} />
+        <Input style={styles.input} placeholder='info' onChange={handleInfoChange} />
       </div>
-      {show && 
-        <div className='info'>
-          <div>Name - {name}</div>
-          <div>age - {age}</div>
-          <div>info - {info}`</div>
-        </div>}
-    </div>
+      <Button variant="outlined" onClick={handleButtonClick} style={styles.button}>Sign In</Button>
+      <span style={message.style}>{message?.message && message.message}</span>
+    </Box>
   )
 }
 
